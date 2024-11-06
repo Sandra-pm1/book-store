@@ -1,0 +1,49 @@
+{%extends 'base.html'%}
+{%block main_block%}
+<h1 style="font-style: italic; color: rgb(2, 34, 2);">BOOKS FOR YOU</h1>
+<div class="container">
+  <div>
+    <form class="d-flex" role="search" action="{%url 'book-list'%}">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="filter"
+        list="records">
+      <datalist id="records">
+        {%for r in records%}
+        <option value="{{r}}"></option>
+        {%endfor%}
+      </datalist>
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    <div class="my-4">
+      <a href="{%url 'book-add'%}" class="btn btn-success">Add New Books</a>
+    </div>
+    <!-- {{records}} -->
+  </div>
+  <div class="row mt-5">
+    {%for b in data%}
+    <div class="col-3 me-3 mb-2">
+      <div class="card" style="width: 100%;">
+       <div style="display: flex; justify-content: center; align-items: center;">
+          {%if b.picture%}
+        <img src="{{b.picture.url}}" class="card-img-top" alt="..." style="width: 30%; height: 30%;" >
+        {%endif%}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{b.title}}</h5>
+          <p class="card-text">{{b.author}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">RS.{{b.price}}/-</li>
+          <li class="list-group-item">{{b.genre}}</li>
+          <li class="list-group-item">{{b.language}}</li>
+        </ul>
+        <div class="card-body">
+          <a href="{%url 'book-details' b.id%}" class="card-link">View</a>
+          <a href="{%url 'book-delete' b.id%}" class="card-link">Delete</a>
+          <a href="{%url 'book-update' b.id%}" class="card-link">Update</a>
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+</div>
+{%endblock%}

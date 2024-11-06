@@ -1,0 +1,100 @@
+
+
+class Books(models.Model):
+
+    title=models.CharField(max_length=200,null=True)
+    author=models.CharField(max_length=200)
+    price=models.PositiveIntegerField()
+    genre=models.CharField(max_length=200)
+    language=models.CharField(max_length=200)
+    publisher=models.CharField(max_length=500)
+
+# field lookups
+_________________
+
+    > less than : __lt
+    > greater than : __gt
+    > less than or equal : __lte
+    > greater than or equal : __gte
+    > exclude
+    > __startswith
+    > __endswith
+    > __containswith
+
+# aggregate functions
+______________________
+
+    > Sum
+    > Max
+    > Min
+    > Avg
+    > Count
+
+# create records
+    > Books.objects.create(title="One Indian Girl",
+                           author="Chetan Bhagat",
+                           price=200,
+                           genre="Fiction",
+                           language="English",
+                           publisher="Rupa Publications")
+
+# list all records
+    >qs=Books.objects.all()
+
+# list title of books with price>250
+    >qs=Books.objects.filter(price__gt=250)
+
+# list all books with language="malayalam"
+    >qs=Books.objects.filter(language="Malayalam")
+
+# list all books with price>300 and language!="malayalam"
+    >qs=Books.objects.filter(price__gt=300).exclude(language="Malayalam") 
+
+# list the details of book with id=5
+    >qs=Books.objects.get(id=5)
+
+# update the price to 500 of book with id=5
+    >qs=Books.objects.filter(id=5).update(price="500")
+
+# delete the details of book with id=3
+    >qs=Books.objects.filter(id=3).delete()
+
+# display books in sorted order basrd on their price
+    >qs=Books.objects.all().order_by("price")   # ascending order
+    >qs=Books.objects.all().order_by("-price")  # descending order
+
+# display books with title that startswith "O"
+    >qs=Books.objects.filter(title__startswith="O")
+
+# display books with title that endswith "l"
+    >qs=Books.objects.filter(title__endswith="l")
+
+# display books with title that contains "nd"
+    >qs=Books.objects.filter(title__contains="nd")
+
+# list all genres
+    >qs=Books.objects.all().values("genre")
+
+# list all genres without any duplications
+    >qs=Books.objects.all().values("genre").distinct()
+
+# find the maximum price of book
+    >qs=Books.objects.all().values("price").aggregate(Max("price"))
+
+# find the minimum price of book
+    qs=Books.objects.all().values("price").aggregate(Min("price"))
+
+# find the count of books
+    qs=Books.objects.all().values("id").aggregate(Count("id"))
+
+# find the average price of the books
+    qs=Books.objects.all().values("price").aggregate(Avg("price"))
+
+# find the sum of the price of all books
+    qs=Books.objects.all().values("price").aggregate(Sum("price"))
+
+# add a new book to the list
+    >Books.objects.create(title="A thousand splendid suns",author="Khaled Hosseini",price=170,genre="Fiction",language="English",publisher="Bloomsbury Publishing PLC")
+
+# list the details of book with genre "fiction" and price>200
+    >qs=Books.objects.filter(genre="fiction",price__gt=200)
