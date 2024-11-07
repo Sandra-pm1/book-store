@@ -8,8 +8,12 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from books.decorators import signin_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
-@method_decorator(signin_required,name="dispatch")
+
+decs=[signin_required,never_cache]
+
+@method_decorator(decs,name="dispatch")
 class BookCreateView(View):
     template_name="book_add.html"
     form_class=BookForm
@@ -27,7 +31,7 @@ class BookCreateView(View):
             messages.success(request,"Failed To Add !!")
         return render(request,self.template_name,{"form":form_instance})
 
-@method_decorator(signin_required,name="dispatch")
+@method_decorator(decs,name="dispatch")
 class BookListView(View):
     template_name="book_list.html"
     def get(self,request,*args,**kwargs):
@@ -51,7 +55,7 @@ class BookListView(View):
                         )
         return render(request,self.template_name,{"data":qs,"records":all_records})
 
-@method_decorator(signin_required,name="dispatch")
+@method_decorator(decs,name="dispatch")
 class BookDetailView(View):
     template_name="book_details.html"
     def get(self,request,*args,**kwargs):
@@ -59,7 +63,7 @@ class BookDetailView(View):
         qs=Books.objects.get(id=id)
         return render(request,self.template_name,{"data":qs})
 
-@method_decorator(signin_required,name="dispatch")
+@method_decorator(decs,name="dispatch")
 class BookDeleteView(View):
     def get(self,request,*args,**kwargs):
         id=kwargs.get("pk")
@@ -93,7 +97,7 @@ class BookDeleteView(View):
     #         return redirect("book-list")
     #     return render(request,self.template_name,{"form":form_instance})
 
-@method_decorator(signin_required,name="dispatch")
+@method_decorator(decs,name="dispatch")
 class BookUpdateView(View):
     template_name="book_update.html"
     form_class=BookUpdateForm
@@ -148,7 +152,7 @@ class SignInView(View):
                 return redirect("book-list")
         return render(request,self.template_name,{"form":form_instance})
 
-@method_decorator(signin_required,name="dispatch")
+@method_decorator(decs,name="dispatch")
 class SignOutView(View):
     def get(self,request,*args,**kwargs):
         logout(request)
